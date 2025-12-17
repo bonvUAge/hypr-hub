@@ -7,7 +7,7 @@ title = "Main system HUB 🦀"
 # Каждая команда - это отдельный [[commands]] блок
 
 [[commands]]
-name = "🔂 Crush the System"
+name = "🔂 Update System"
 command = "./scripts/update.sh"
 
 [[commands]]

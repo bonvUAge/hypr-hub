@@ -44,7 +44,7 @@ impl Config {
     // 🦀 Ищем файл конфига в разных местах
     fn find_config_file() -> Result<PathBuf, String> {
         // 1. Сначала ищем в текущей директории
-        let local_config = PathBuf::from("config.toml");
+        let local_config = PathBuf::from("./src/config/config.toml");
         if local_config.exists() {
             return Ok(local_config);
         }
