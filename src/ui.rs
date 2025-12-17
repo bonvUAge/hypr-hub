@@ -11,7 +11,7 @@ use ratatui::{
 };
 use std::io::Result;
 
-use crate::app::App;
+use crate::app::{App, MenuItem};
 use crate::commands::execute_command;
 
 pub fn run_app(
@@ -43,7 +43,14 @@ fn render_ui(f: &mut Frame, app: &mut App) {
     let items: Vec<ListItem> = app
         .items
         .iter()
-        .map(|item| ListItem::new(item.name.as_str()))
+        .map(|item| match item {
+            MenuItem::CategoryHeader(name) => ListItem::new(format!("═══ {} ═══", name)).style(
+                Style::default()
+                    .fg(Color::Cyan)
+                    .add_modifier(Modifier::BOLD),
+            ),
+            MenuItem::Command(cmd) => ListItem::new(format!("  {}", cmd.name)),
+        })
         .collect();
 
     let list = List::new(items)
@@ -68,18 +75,15 @@ fn handle_command_execution(
     app: &mut App,
 ) -> Result<()> {
     if let Some(command_str) = app.get_selected_command() {
-        // Exit raw mode to show command output
         disable_raw_mode()?;
         execute!(terminal.backend_mut(), LeaveAlternateScreen)?;
 
         execute_command(command_str)?;
 
-        // Wait for user input before returning to UI
         println!("\n[Done] Press Enter to return to menu...");
         let mut input = String::new();
         std::io::stdin().read_line(&mut input)?;
 
-        // Re-enter raw mode
         enable_raw_mode()?;
         execute!(terminal.backend_mut(), EnterAlternateScreen)?;
         terminal.clear()?;

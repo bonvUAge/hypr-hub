@@ -1,24 +1,24 @@
-# 🦀 Конфигурация hypr-hub
-
 [app]
 title = "Main system HUB 🦀"
 
-# 🦀 Список команд
-# Каждая команда - это отдельный [[commands]] блок
+[[categories]]
+name = "System"
 
-[[commands]]
+[[categories.commands]]
 name = "🔂 Update System"
-command = "./scripts/update.sh"
+command = "./src/scripts/update.sh"
 
-[[commands]]
+[[categories.commands]]
 name = "🧹 Clean Pacman&Paru Cache"
-command = "./scripts/scc.sh"
+command = "./src/scripts/scc.sh"
 
-[[commands]]
+[[categories.commands]]
 name = "🪠 Clean RAM"
 command = "sudo sync; sudo sysctl -w vm.drop_caches=3"
 
-# 🦀 Добавь свои команды тут!
-# [[commands]]
-# name = "🚀 Твоя команда"
-# command = "echo 'Hello from Rust!'"
+[[categories]]
+name = "Personalization"
+
+[[categories.commands]]
+name = "🎨 Change Theme"
+command = "echo 'Theme changer coming soon'"

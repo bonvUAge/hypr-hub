@@ -32,11 +32,10 @@ fn main() -> Result<()> {
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
 
-    let mut app = App::new(config.commands, config.app.title);
+    let mut app = App::new(config.categories, config.app.title);
 
     let res = run_app(&mut terminal, &mut app);
 
-    // Cleanup and restore terminal
     disable_raw_mode()?;
     execute!(terminal.backend_mut(), LeaveAlternateScreen)?;
     terminal.show_cursor()?;
