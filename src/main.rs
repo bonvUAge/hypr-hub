@@ -1,10 +1,7 @@
-// 🦀 Главная точка входа в приложение
-// Здесь мы только инициализируем терминал и запускаем приложение
-
 mod app;
 mod commands;
 mod config;
-mod ui; // 🦀 Добавили новый модуль!
+mod ui;
 
 use crossterm::{
     execute,
@@ -18,19 +15,15 @@ use config::Config;
 use ui::run_app;
 
 fn main() -> Result<()> {
-    // 🦀 Загружаем конфиг
-    // В JavaScript это было бы: const config = require('./config.json')
-    // Но здесь с обработкой ошибок!
     let config = match Config::load() {
         Ok(cfg) => cfg,
         Err(e) => {
             println!("{}", e);
-            println!("⚠️  Использую дефолтный конфиг...");
+            println!("⚠️  Using default config...");
             Config::default()
         }
     };
 
-    // 🦀 Инициализация терминала
     enable_raw_mode()?;
 
     let mut stdout = io::stdout();
@@ -39,13 +32,11 @@ fn main() -> Result<()> {
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
 
-    // 🦀 Создаём наше приложение с данными из конфига
     let mut app = App::new(config.commands, config.app.title);
 
-    // 🦀 Запускаем основной цикл
     let res = run_app(&mut terminal, &mut app);
 
-    // 🦀 Очистка и восстановление терминала
+    // Cleanup and restore terminal
     disable_raw_mode()?;
     execute!(terminal.backend_mut(), LeaveAlternateScreen)?;
     terminal.show_cursor()?;
