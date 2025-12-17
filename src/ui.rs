@@ -1,5 +1,4 @@
 // 🦀 Модуль UI - отрисовка интерфейса и обработка событий
-// Это как компонент в React - отвечает за визуальное представление
 
 use crossterm::{
     event::{self, Event, KeyCode},
@@ -7,12 +6,10 @@ use crossterm::{
     terminal::{EnterAlternateScreen, LeaveAlternateScreen, disable_raw_mode, enable_raw_mode},
 };
 use ratatui::{
-    Terminal,
+    Frame, Terminal,
     backend::CrosstermBackend,
-    layout::{Constraint, Direction, Layout},
     style::{Color, Modifier, Style},
     widgets::{Block, Borders, List, ListItem},
-    Frame,
 };
 use std::io::Result;
 
@@ -20,15 +17,12 @@ use crate::app::App;
 use crate::commands::execute_command;
 
 // 🦀 Главный цикл приложения
-// Похож на game loop или requestAnimationFrame в браузере!
 pub fn run_app(
     terminal: &mut Terminal<CrosstermBackend<std::io::Stdout>>,
     app: &mut App,
 ) -> Result<()> {
     loop {
         // 🦀 Отрисовка UI
-        // terminal.draw() принимает closure (замыкание)
-        // Это как callback функция в JavaScript: (f) => { ... }
         terminal.draw(|f| {
             render_ui(f, app);
         })?;
@@ -36,44 +30,38 @@ pub fn run_app(
         // 🦀 Обработка событий клавиатуры
         if let Event::Key(key) = event::read()? {
             match key.code {
-                KeyCode::Char('q') => return Ok(()), // Выход по 'q'
-                KeyCode::Down => app.next(),         // Вниз
-                KeyCode::Up => app.previous(),       // Вверх
+                KeyCode::Char('q') => return Ok(()),
+                KeyCode::Down => app.next(),
+                KeyCode::Up => app.previous(),
                 KeyCode::Enter => {
-                    // При нажатии Enter запускаем выбранную команду
                     handle_command_execution(terminal, app)?;
                 }
-                _ => {} // Игнорируем остальные клавиши
+                _ => {}
             }
         }
     }
 }
 
 // 🦀 Функция отрисовки UI
-// Frame - это как canvas контекст в JavaScript
-// Мы "рисуем" виджеты на фрейме
 fn render_ui(f: &mut Frame, app: &mut App) {
     let size = f.area();
 
     // 🦀 Создаём список элементов
-    // .iter() - это итератор (как Array.map() в JavaScript)
-    // .map() - трансформируем каждый элемент
-    // .collect() - собираем результат в Vec
+    // ВАЖНО: теперь используем item.name.as_str() потому что name это String
     let items: Vec<ListItem> = app
         .items
         .iter()
-        .map(|i| ListItem::new(i.0))
+        .map(|item| ListItem::new(item.name.as_str()))
         .collect();
 
-    // 🦀 Создаём виджет списка
+    // 🦀 Создаём виджет списка с заголовком из конфига
     let list = List::new(items)
         .block(
             Block::default()
                 .borders(Borders::ALL)
-                .title(" Main system HUB 🦀 "),
+                .title(format!(" {} ", app.title)), // Заголовок из конфига!
         )
         .highlight_style(
-            // Стиль выделенного элемента
             Style::default()
                 .bg(Color::Yellow)
                 .fg(Color::Black)
@@ -81,32 +69,28 @@ fn render_ui(f: &mut Frame, app: &mut App) {
         )
         .highlight_symbol(">> ");
 
-    // 🦀 Рендерим stateful виджет
-    // Передаём &mut app.state, чтобы виджет знал, что выбрано
     f.render_stateful_widget(list, size, &mut app.state);
 }
 
 // 🦀 Обработка выполнения команды
-// Здесь мы временно выходим из TUI режима, запускаем команду,
-// и возвращаемся обратно
 fn handle_command_execution(
     terminal: &mut Terminal<CrosstermBackend<std::io::Stdout>>,
     app: &mut App,
 ) -> Result<()> {
     if let Some(command_str) = app.get_selected_command() {
-        // 1. Выходим из raw mode и альтернативного экрана
+        // 1. Выходим из raw mode
         disable_raw_mode()?;
         execute!(terminal.backend_mut(), LeaveAlternateScreen)?;
 
         // 2. Запускаем команду
         execute_command(command_str)?;
 
-        // 3. Ждём нажатия Enter от пользователя
+        // 3. Ждём нажатия Enter
         println!("\n[Done] Press Enter to return to menu...");
         let mut input = String::new();
         std::io::stdin().read_line(&mut input)?;
 
-        // 4. Возвращаемся в raw mode и альтернативный экран
+        // 4. Возвращаемся в raw mode
         enable_raw_mode()?;
         execute!(terminal.backend_mut(), EnterAlternateScreen)?;
         terminal.clear()?;

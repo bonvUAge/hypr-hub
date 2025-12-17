@@ -1,44 +1,34 @@
 // 🦀 Модуль с логикой приложения (App state)
 // Это как состояние (state) в React - храним данные и методы для их изменения
 
+use crate::config::CommandItem;
 use ratatui::widgets::ListState;
 
 // 🦀 Структура App - это "состояние" нашего приложения
-// В Rust структуры (struct) похожи на объекты в JavaScript,
-// но с одним важным отличием: типы полей фиксированы!
-pub struct App<'a> {
-    // 'a - это lifetime (время жизни)
-    // Говорит компилятору: "Эй, эти строки будут жить достаточно долго!"
-    // В JavaScript таких проблем нет - там сборщик мусора
-    pub items: Vec<(&'a str, &'a str)>,
+// ВАЖНО: больше нет lifetime 'a, потому что CommandItem - owned данные (String вместо &str)
+pub struct App {
+    pub items: Vec<CommandItem>, // Теперь Vec<CommandItem> вместо Vec<(&str, &str)>
     pub state: ListState,
+    pub title: String, // Заголовок из конфига
 }
 
-impl<'a> App<'a> {
-    // 🦀 Конструктор - создаём новый экземпляр App
-    // Это как constructor() в классах JavaScript
-    pub fn new() -> App<'a> {
+impl App {
+    // 🦀 Конструктор теперь принимает команды и заголовок
+    pub fn new(commands: Vec<CommandItem>, title: String) -> App {
         let mut state = ListState::default();
-        // Выбираем первый элемент при старте (как useState(0) в React)
         state.select(Some(0));
 
         App {
-            items: vec![
-                ("🔂 Update System", "./scripts/update.sh"),
-                ("🧹 Clean Pacman&Paru Cache", "./scripts/scc.sh"),
-                ("🪠 Clean RAM", "sudo sync; sudo sysctl -w vm.drop_caches=3"),
-            ],
+            items: commands,
             state,
+            title,
         }
     }
 
     // 🦀 Переход к следующему пункту меню
-    // &mut self - это как this в JavaScript, но явно показывает,
-    // что мы ИЗМЕНЯЕМ объект (мутируем его)
     pub fn next(&mut self) {
         let i = match self.state.selected() {
             Some(i) => {
-                // Циклический переход: если последний элемент - возвращаемся к первому
                 if i >= self.items.len() - 1 {
                     0
                 } else {
@@ -54,7 +44,6 @@ impl<'a> App<'a> {
     pub fn previous(&mut self) {
         let i = match self.state.selected() {
             Some(i) => {
-                // Циклический переход в обратную сторону
                 if i == 0 {
                     self.items.len() - 1
                 } else {
@@ -67,9 +56,8 @@ impl<'a> App<'a> {
     }
 
     // 🦀 Получить выбранную команду
-    // Option<T> - это безопасный способ сказать "может быть значение, а может и нет"
-    // В JavaScript это как value || null, но типобезопасно!
-    pub fn get_selected_command(&self) -> Option<&str> {
-        self.state.selected().map(|i| self.items[i].1)
+    // Теперь возвращаем &String вместо &str
+    pub fn get_selected_command(&self) -> Option<&String> {
+        self.state.selected().map(|i| &self.items[i].command)
     }
 }

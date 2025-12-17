@@ -17,10 +17,7 @@ pub fn execute_command(command_str: &str) -> Result<()> {
     // Оператор ? - это syntactic sugar для обработки ошибок
     // Если Result это Err, функция немедленно вернёт ошибку
     // В JavaScript это похоже на: if (err) throw err;
-    Command::new("sh")
-        .arg("-c")
-        .arg(command_str)
-        .status()?;
+    Command::new("sh").arg("-c").arg(command_str).status()?;
 
     Ok(())
 }
