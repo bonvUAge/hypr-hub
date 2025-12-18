@@ -16,9 +16,24 @@ command = "./src/scripts/scc.sh"
 name = "🪠 Clean RAM"
 command = "sudo sync; sudo sysctl -w vm.drop_caches=3"
 
+[[categories.commands]]
+name = " Disk Analysis"
+command = "dua i ~/"
+
 [[categories]]
 name = "Personalization"
 
 [[categories.commands]]
-name = "🎨 Change Theme"
-command = "echo 'Theme changer coming soon'"
+name = "Qt6 Theme Control"
+command = "nohup qt6ct >/dev/null 2>&1 &"
+
+[[categories.commands]]
+name = "GTK Theme Control"
+command = "nohup nwg-look >/dev/null 2>&1 &"
+
+[[categories]]
+name = "Development"
+
+[[categories.commands]]
+name = " Sync dot files"
+command = "~/GitStuff/UA-dot/sync.sh"

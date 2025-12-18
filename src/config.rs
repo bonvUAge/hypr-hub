@@ -60,32 +60,23 @@ impl Config {
             app: AppConfig {
                 title: "Main system HUB 🦀".to_string(),
             },
-            categories: vec![
-                Category {
-                    name: "System".to_string(),
-                    commands: vec![
-                        CommandItem {
-                            name: "🔂 Update System".to_string(),
-                            command: "./scripts/update.sh".to_string(),
-                        },
-                        CommandItem {
-                            name: "🧹 Clean Pacman&Paru Cache".to_string(),
-                            command: "./scripts/scc.sh".to_string(),
-                        },
-                        CommandItem {
-                            name: "🪠 Clean RAM".to_string(),
-                            command: "sudo sync; sudo sysctl -w vm.drop_caches=3".to_string(),
-                        },
-                    ],
-                },
-                Category {
-                    name: "Personalization".to_string(),
-                    commands: vec![CommandItem {
-                        name: "🎨 Change Theme".to_string(),
-                        command: "echo 'Theme changer coming soon'".to_string(),
-                    }],
-                },
-            ],
+            categories: vec![Category {
+                name: "System".to_string(),
+                commands: vec![
+                    CommandItem {
+                        name: "🔂 Update System".to_string(),
+                        command: "./scripts/update.sh".to_string(),
+                    },
+                    CommandItem {
+                        name: "🧹 Clean Pacman&Paru Cache".to_string(),
+                        command: "./scripts/scc.sh".to_string(),
+                    },
+                    CommandItem {
+                        name: "🪠 Clean RAM".to_string(),
+                        command: "sudo sync; sudo sysctl -w vm.drop_caches=3".to_string(),
+                    },
+                ],
+            }],
         }
     }
 }
