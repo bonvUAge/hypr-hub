@@ -5,43 +5,43 @@ title = "Main system HUB 🦀"
 name = "System"
 
 [[categories.commands]]
-name = "🔂 Update System"
+name = "󰚰 Update System"
 command = "./src/scripts/update.sh"
 
 [[categories.commands]]
-name = "🗑️ Trash Cleanup"
+name = " Trash Cleanup"
 command = "trash-empty"
 
 [[categories.commands]]
-name = "🧹 Clean Pacman&Paru Cache"
+name = " Clean Pacman&Paru Cache"
 command = "./src/scripts/scc.sh"
 
 [[categories.commands]]
-name = "🪠 Clean RAM"
+name = " Clean RAM"
 command = "sudo sync; sudo sysctl -w vm.drop_caches=3"
 
 [[categories.commands]]
-name = "💿 Disk Analysis"
+name = " Disk Analysis"
 command = "dua i ~/"
 
 [[categories]]
 name = "Personalization"
 
 [[categories.commands]]
-name = "Change Wallpaper"
+name = "󰸉 Change Wallpaper"
 command = "./src/scripts/change_wallpaper.sh"
 
 [[categories.commands]]
-name = "Qt6 Theme Control"
+name = " Qt6 Theme Control"
 command = "nohup qt6ct >/dev/null 2>&1 &"
 
 [[categories.commands]]
-name = "GTK Theme Control"
+name = " GTK Theme Control"
 command = "nohup nwg-look >/dev/null 2>&1 &"
 
 [[categories]]
 name = "Development"
 
 [[categories.commands]]
-name = " Sync dot files"
+name = " Sync dot files"
 command = "~/GitStuff/UA-dot/sync.sh"
