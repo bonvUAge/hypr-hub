@@ -9,6 +9,10 @@ name = "🔂 Update System"
 command = "./src/scripts/update.sh"
 
 [[categories.commands]]
+name = "🗑️ Trash Cleanup"
+command = "trash-empty"
+
+[[categories.commands]]
 name = "🧹 Clean Pacman&Paru Cache"
 command = "./src/scripts/scc.sh"
 
@@ -17,11 +21,15 @@ name = "🪠 Clean RAM"
 command = "sudo sync; sudo sysctl -w vm.drop_caches=3"
 
 [[categories.commands]]
-name = " Disk Analysis"
+name = "💿 Disk Analysis"
 command = "dua i ~/"
 
 [[categories]]
 name = "Personalization"
+
+[[categories.commands]]
+name = "Change Wallpaper"
+command = "./src/scripts/change_wallpaper.sh"
 
 [[categories.commands]]
 name = "Qt6 Theme Control"
